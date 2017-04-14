@@ -1,5 +1,5 @@
 {
-  "name": "U9ImBase_Barcode",
+  "name": "u9imbase-barcode",
   "version": "1.0.0",
   "description": "智能工厂移动应用-Base_Barcode库",
   "main": "gulpfile.js",

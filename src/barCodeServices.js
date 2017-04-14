@@ -41,7 +41,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.error = function(err) {
+        cfg.errorFn = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -69,7 +69,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.error = function(err) {
+        cfg.errorFn = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -110,7 +110,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.error = function(err) {
+        cfg.errorFn = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -130,7 +130,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.error = function(err) {
+        cfg.errorFn = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -151,7 +151,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.error = function(err) {
+        cfg.errorFn = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -358,15 +358,15 @@
         //开始执行ajax
         axios.request({
                 method: ajaxInfo.type,
-                responseType: ajaxInfo.dataType
+                responseType: ajaxInfo.dataType,
                 url: ajaxInfo.url,
                 data: ajaxInfo.data,
                 timeout: 1800000
             }).then(function(response) {
                 ajaxInfo.success(response.data.Data);
             })
-            .catch(function(error) {
-                if (typeof ajaxInfo.error == "function") ajaxInfo.error(error);
+            .catch(function(err) {
+                if (typeof ajaxInfo.errorFn == "function") ajaxInfo.errorFn(err);
             });;
     };
 
