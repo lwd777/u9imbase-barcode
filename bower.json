@@ -1,0 +1,21 @@
+{
+  "name": "u9imbase-barcode",
+  "version": "1.0.0",
+  "homepage": "www.yonyou.com",
+  "authors": [
+    "lwd <lwd@yonyou.com>"
+  ],
+  "description": "智能工厂移动应用-Base_Barcode库",
+  "main": [
+    "./dist/u9imbase-barcode.js"
+  ],
+  "ignore": [
+    ".gitignore",
+    ".jshintrc",
+    "gulpfile.js"
+  ],
+  "dependencies": {
+    "U9ImBase": "https://github.com/U9XXL/U9ImBase.git",
+    "jquery": "^3.2.1"
+  }
+}

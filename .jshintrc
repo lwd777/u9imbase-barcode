@@ -1,0 +1,20 @@
+{
+    "curly": true,
+    "eqeqeq": true,
+    "immed": true,
+    "latedef": "nofunc",
+    "newcap": true,
+    "noarg": true,
+    "sub": true,
+    "undef": true,
+    "eqnull": true,
+    "browser": true,
+    "nomen": true,
+    "globals": {
+        "alert": true,
+        "ionic": true,
+        "cordova": true,
+        "summer": true,
+        "console": true
+    }
+}
