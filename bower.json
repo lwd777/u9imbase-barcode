@@ -16,6 +16,6 @@
   ],
   "dependencies": {
     "U9ImBase": "https://github.com/U9XXL/U9ImBase.git",
-    "jquery": "~2.2.0"
+    "axios": "^0.16.1"
   }
 }

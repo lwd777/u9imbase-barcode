@@ -1,7 +1,7 @@
 (function($, u9) {
 
     function BarCodeServices() {
-        this.context = getContext();
+
     };
 
     //获取已选组织
@@ -22,6 +22,7 @@
 
     //条码解析 接口
     BarCodeServices.prototype.barCodeAnalyze = function(dataInfo, successFn, errorFn) {
+        this.context = getContext();
         var cfg = {};
         //地址
         cfg.url = getAbsoluteURL('/api/barcodeinfo/getBarCodeInfo');
@@ -40,7 +41,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.errorFn = function(err) {
+        cfg.error = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -49,7 +50,7 @@
 
     //料品条码解析接口
     BarCodeServices.prototype.barCodeAnalyzeOnlyItemBC = function(barcode, successFn, errorFn) {
-
+        this.context = getContext();
         var cfg = {};
         //地址
         cfg.url = getAbsoluteURL('/api/barcodeinfo/getBarCodeInfo');
@@ -68,7 +69,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.errorFn = function(err) {
+        cfg.error = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -77,6 +78,7 @@
 
     //条码生单接口
     BarCodeServices.prototype.createDoc = function(dataInfo, successFn, errorFn) {
+        this.context = getContext();
         var newDate = new Date();
         var cfg = {};
         //地址
@@ -108,7 +110,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.errorFn = function(err) {
+        cfg.error = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -128,7 +130,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.errorFn = function(err) {
+        cfg.error = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -149,7 +151,7 @@
         cfg.success = function(data) {
             successFn && successFn(data);
         };
-        cfg.errorFn = function(err) {
+        cfg.error = function(err) {
             errorFn && errorFn(err);
         };
 
@@ -300,10 +302,10 @@
             type: "GET", //访问方式：如果dataPata不为空，自动设置为POST；如果为空设置为GET。
             dataType: 'JSON', //数据类型：JSON、JSONP、text。由配置信息来搞定，便于灵活设置
             cache: true, //是否缓存，默认缓存
-            xhrFields: {
-                //允许跨域访问时添加cookie。cors跨域的时候需要设置
-                withCredentials: true
-            },
+            // xhrFields: {
+            //     //允许跨域访问时添加cookie。cors跨域的时候需要设置
+            //     withCredentials: true
+            // },
             urlPata: {}, //url后面的参数。一定会加在url后面，不会加到form里。
             formPata: {}, //表单里的参数。如果dataType是JSON，一定加在form里，不会加在url后面；如果dataType是JSONP的话，只能加在url后面。
 
@@ -354,25 +356,18 @@
         }
 
         //开始执行ajax
-        $.ajax({
-            type: ajaxInfo.type,
-            dataType: ajaxInfo.dataType,
-            cache: ajaxInfo.cache,
-            xhrFields: {
-                //允许跨域访问时添加cookie
-                withCredentials: true
-            },
-            url: ajaxInfo.url,
-            data: ajaxInfo.data,
-            timeout: 1800000,
-            error: function(err) { //访问失败，自动停止加载动画，并且给出提示
-                if (typeof ajaxInfo.error == "function") ajaxInfo.error(err);
-            },
-
-            success: function(data) {
-                ajaxInfo.success(data);
-            }
-        });
+        axios.request({
+                method: ajaxInfo.type,
+                responseType: ajaxInfo.dataType
+                url: ajaxInfo.url,
+                data: ajaxInfo.data,
+                timeout: 1800000
+            }).then(function(response) {
+                ajaxInfo.success(response.data.Data);
+            })
+            .catch(function(error) {
+                if (typeof ajaxInfo.error == "function") ajaxInfo.error(error);
+            });;
     };
 
     //取上下文函数
@@ -424,7 +419,7 @@
         }
     };
 
-     //0补函数
+    //0补函数
     function fnPrecision(vP) {
         var reValue = '';
         for (var i = 0; i < vP; i++) {
@@ -435,4 +430,4 @@
 
     window.BarCodeServices = new BarCodeServices();
 
-})(jquery, window.u9);
+})(axios, window.u9);
