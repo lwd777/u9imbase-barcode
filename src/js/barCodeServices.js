@@ -1,4 +1,4 @@
-(function($, u9) {
+(function(axios, u9) {
 
     function BarCodeServices() {
 
@@ -330,8 +330,6 @@
             } else { //get或者jsonp
                 ajaxInfo.type = "POST";
             }
-            ajaxInfo.data = ajaxInfo.type;
-
         }
 
         if (typeof ajaxInfo.cache == "undefined") {

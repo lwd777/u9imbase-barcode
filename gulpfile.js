@@ -1,4 +1,3 @@
-
 const path = require('path');
 const gulp = require('gulp');
 const gulpLoadPlugins = require('gulp-load-plugins');
@@ -14,6 +13,10 @@ const $ = gulpLoadPlugins({
 
 const config = {
     src: 'src',
+    styles: 'css',
+    fonts: 'fonts',
+    images: 'img',
+    scripts: 'js',
     dist: 'dist',
     module: 'u9imbase-barcode'
 };
@@ -35,20 +38,47 @@ const banner =
 gulp.task('clean', del.bind(null, [config.dist]));
 
 gulp.task('lint', () => {
-  return gulp.src(path.join(config.src, '/**/*.js'))
+  return gulp.src(path.join(config.src, config.scripts + '/**/*.js'))
     .pipe($.jshint())
     .pipe($.jshint.reporter(stylish));
 });
 
+gulp.task('styles', () => {
+    return gulp.src(path.join(config.src, config.styles + '/**/*.css'))
+        .pipe($.concat(config.module + '.css'))
+        .pipe($.header(banner))
+        .pipe(gulp.dest(path.join(config.dist, config.styles)));
+});
+
+gulp.task('cssnano', () => {
+    return gulp.src(path.join(config.dist, config.styles + '/' + config.module + '.css'))
+        .pipe($.rename(config.module + '.min.css'))
+        // .pipe($.cssnano({ safe: true, autoprefixer: false }))
+        .pipe(gulp.dest(path.join(config.dist, config.styles)));
+});
+
+gulp.task('images', () => {
+    return gulp.src(path.join(config.src, config.images + '/**/*'))
+        // .pipe($.cache($.imagemin()))
+        .pipe(gulp.dest(path.join(config.dist, config.images)));
+});
+
+gulp.task('fonts', () => {
+    return gulp.src(path.join(config.src, config.fonts + '/**/*'))
+        // .pipe($.cache($.imagemin()))
+        .pipe(gulp.dest(path.join(config.dist, config.fonts)));
+});
+
 gulp.task('scripts', () => {
-    return gulp.src(path.join(config.src, '/**/*.js'))
+    return gulp.src(path.join(config.src, config.scripts + '/**/*.js'))
+        .pipe($.fileSort())
         .pipe($.concat(config.module + '.js'))
         .pipe($.header(banner))
         .pipe(gulp.dest(config.dist));
 });
 
 gulp.task('uglify', () => {
-    return gulp.src(path.join(config.dist, '/' + config.module + '.js'))
+    return gulp.src(path.join(config.dist, config.module + '.js'))
         .pipe($.rename(config.module + '.min.js'))
         .pipe($.uglify())
         .pipe($.header(banner))
@@ -57,7 +87,7 @@ gulp.task('uglify', () => {
 
 gulp.task('build', () => {
     return new Promise(resolve => {
-        runSequence('lint', 'scripts', 'uglify', resolve);
+        runSequence('lint', ['styles', 'scripts', 'fonts', 'images'], ['cssnano', 'uglify'], resolve);
     });
 });
 
