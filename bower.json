@@ -15,7 +15,6 @@
     "gulpfile.js"
   ],
   "dependencies": {
-    "U9ImBase": "https://github.com/U9XXL/U9ImBase.git",
-    "axios": "^0.16.1"
+    "U9ImBase": "https://github.com/U9XXL/U9ImBase.git" 
   }
 }

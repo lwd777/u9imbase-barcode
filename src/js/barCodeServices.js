@@ -1,4 +1,4 @@
-(function(axios, u9) {
+(function($, u9) {
 
     function BarCodeServices() {
 
@@ -6,7 +6,9 @@
 
     //获取已选组织
     BarCodeServices.prototype.getOrgCode = function() {
-        var org = JSON.Parse(window.localStorage.getItem("U9ImPDA_org"));
+
+        var org = JSON.parse(window.localStorage.getItem("U9ImPDA_org"));
+        
         var orgCode = '';
         if (org) {
             orgCode = org.Code;
@@ -354,18 +356,25 @@
         }
 
         //开始执行ajax
-        axios.request({
-                method: ajaxInfo.type,
-                responseType: ajaxInfo.dataType,
-                url: ajaxInfo.url,
-                data: ajaxInfo.data,
-                timeout: 1800000
-            }).then(function(response) {
-                ajaxInfo.success(response.data.Data);
-            })
-            .catch(function(err) {
+        $.ajax({
+            type: ajaxInfo.type,
+            dataType: ajaxInfo.dataType,
+            url: ajaxInfo.url,
+            data: ajaxInfo.data,
+            timeout: 1800000,
+            success: function(result) {
+                if (result.Data) {
+                    ajaxInfo.success(result.Data);
+                } else if (result.status === '0000') {
+                    ajaxInfo.success(result.data);
+                } else {
+                    ajaxInfo.success(result.Error || result);
+                }
+            },
+            error: function(err) {
                 if (typeof ajaxInfo.errorFn == "function") ajaxInfo.errorFn(err);
-            });;
+            }
+        });
     };
 
     //取上下文函数
@@ -373,7 +382,9 @@
 
         var errMessage = '';
         var data = {};
+
         var org = JSON.parse(window.localStorage.getItem("U9ImPDA_org"));
+
         var orgCode = '';
         if (org) {
             orgCode = org.Code;
@@ -389,13 +400,13 @@
         } else {
             data.orgCode = orgCode;
         }
-        var entCode = u9.User('Orgs')[0].ErpEntCode;
+        var entCode = u9.User('ErpEntCode');
         if (!entCode) {
             errMessage = '智能工厂未定义用户上的ERP企业编码，PDA读取ERP企业编码失败！';
         } else {
             data.entCode = entCode;
         }
-        var userCode = u9.User('Orgs')[0].ErpUserCode;
+        var userCode = u9.User('ErpUserCode');
         if (!userCode) {
             errMessage = '智能工厂未定义用户的ERP用户编码，PDA读取ERP用户编码失败！';
         } else {
@@ -428,4 +439,4 @@
 
     window.BarCodeServices = new BarCodeServices();
 
-})(axios, window.u9);
+})(jQuery, window.u9);
